@@ -1,0 +1,135 @@
+@charset "UTF-8";
+
+	/* heder_start-------------------------------------------------------------------------------- */	
+		#user_id1 a{
+		color:#ffffff;
+	}
+	#user_in{
+		background-color:#444444;
+	}
+  	a{
+  		text-decoration:none;
+  	}
+    #user_id1{
+     	color:white; 
+		width:1000px; overflow:hidden; height:30px; line-height:30px; margin-right:30px;  margin:0 auto;
+	} 
+	#user_in ul li{
+		display:inline; float:right;  list-style:none;  font-size:.9em;
+	}
+	#tytle_serch{
+		width:1000px;   text-align:center;  margin : 10px auto;
+	}
+	li{
+		list-style-type:none;
+	}
+	
+	hr{
+		border:1px solid #c0c0c0; 
+	}
+	#menu ul{
+		text-align:center; margin:5px 0;
+	}
+	#menu ul li{
+		display:inline; margin: 0px 40px; text-align:center;
+	}
+	/* heder_end-------------------------------------------------------------------------------- */	
+	/* section_start---------------------------------------------------------------------------- */
+
+	/* main------------------------------------------------------------------------------------- */
+	#best_book{
+	 overflow:hidden; width:1000px; height:400px; border:1px solid #c0c0c0; margin:0 auto;
+	}
+	#blank{
+		margin:10px auto; width:1000px; text-align:center; 
+	}
+	#book_list{
+		 width:1000px; height:300px; border:1px solid #c0c0c0; margin:0 auto;  
+	}
+	#book_list_box{
+	   float:left; position:relative; overflow:hidden; height:250px; width:800px; margin:10px 70px;
+	}
+	#book_list_box img{
+		margin:5px 6px; display:inline; border:1px solid #c0c0c0; width:180px; height:240px;
+	}
+
+	span.prev {float:left; width:24px; margin-top:120px;}
+	span.next {float:left; width:24px; margin-top:120px;}
+
+	ul.bt-roll {width:110px; margin:0 auto; margin-top:20px;}
+	ul.bt-roll li {float:left; margin-right:5px;}  
+	
+	#notice{
+		 margin:10px auto; height:300px; width:1000px; 
+	}
+	#notice div{
+		display:inline-block; height:300px; width:495px;
+	}
+	/* main------------------------------------------------------------------------------------- */
+	/* member ---------------------------------------------------------------------------------- */
+	.tb{
+		border:5px double #cccccc; padding:50px 50px; width:100%; height:100px;
+	}
+	#signUptb input{
+		padding:10px; margin:10px;
+	}
+	#signUptb{
+		margin-left:50px;
+	}
+	@import url('http://fonts.googleapis.com/earlyaccess/nanumgothic.css');
+	body{font-family:'Nanum Gothic';}
+	#td1 tr td{
+		text-align:center
+	}	
+	input.signUpbt{
+		background:url(/Spring/resources/images/signUpBt.jpg) no-repeat;
+		width:140px;
+		height:40px;
+		border:none;
+		cursor:pointer;
+	}
+	input.idSearch{
+		background:url(/Spring/resources/images/idSearch.jpg) no-repeat;
+		width:140px;
+		height:40px;
+		border:none;
+		cursor:pointer;
+	}
+	input.pwdSearch{
+		background:url(/Spring/resources/images/pwdSearch.jpg) no-repeat;
+		width:140px;
+		height:40px;
+		border:none;
+		cursor:pointer;
+	}
+	input.loginButton{
+		background:url(/Spring/resources/images/loginButton.png) no-repeat;
+		width:130px;
+		height:107px;
+		border:none;
+		cursor:pointer;
+	}
+	#modifytb input{
+		padding:10px; margin:10px;
+	}
+	#modifytb{
+		margin-left:50px;
+	}
+	#span{
+		padding:10px; margin:10px;
+	}
+	/* member_end ------------------------------------------------------------------------------ */
+	/* section_end------------------------------------------------------------------------------ */
+	/* footer_start----------------------------------------------------------------------------- */
+	footer{
+		background-color:#444444; padding:2px;
+	}
+	footer div{
+		width:1000px; margin:0 auto; border:1px solid #c0c0c0; padding:10px; color:#c0c0c0;
+	}
+	footer div img{
+		float:left; height:85px; margin-right:10px;
+	}
+
+	/* footer_end------------------------------------------------------------------------------- */
+	

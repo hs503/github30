@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!DOCTYPE mapper
+			    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+			    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+			    
+	<mapper namespace="bmsProject.mvc.Spring.persistance.MemberDAO">
+		<insert id="insertMember" parameterType="bmsProject.mvc.Spring.vo.MemberVo">
+			INSERT INTO cusInfo(id, pwd, name, gender, birth, email, hp, addr) VALUES(#{id},#{pwd},#{name},#{gender},#{birth},#{email},#{hp},#{addr})
+		</insert>
+		
+		<select id="idCheck" parameterType="String" resultType="int">
+			SELECT count(*) FROM cusInfo WHERE id = #{strId}
+		</select>
+		
+		<select id="check" parameterType="java.util.Map" resultType="int">
+			SELECT count(*) FROM cusInfo WHERE id=#{strId}
+		</select>
+		
+		<select id="pwdS" parameterType="java.util.Map" resultType="String">
+			SELECT pwd FROM cusInfo WHERE id=#{strId}
+		</select>
+		
+		<select id="checkName" parameterType="String" resultType="String">
+			SELECT name FROM cusInfo WHERE id=#{strId}
+		</select>
+		
+		<select id="getMemberInfo" parameterType="String" resultType="bmsProject.mvc.Spring.vo.MemberVo">
+			SELECT * FROM cusInfo WHERE id=#{id}
+		</select>
+		
+		<update id="updateMember" parameterType="bmsProject.mvc.Spring.vo.MemberVo">
+			UPDATE cusInfo SET pwd=#{pwd}, name=#{name}, hp=#{hp}, email=#{email},addr=#{addr} WHERE id=#{id}
+		</update>
+		
+		<delete id="delete" parameterType="String">
+			DELETE FROM cusinfo WHERE id = #{memId}
+		</delete>
+		
+		<insert id="insertChat" parameterType="java.util.Map">
+			INSERT INTO carts(num, code, id, image, title, author, price, amount) VALUES(cartsNum.nextval,#{dto.code},#{id},#{dto.image},#{dto.title},#{dto.author},#{dto.price},#{dto.amount})
+		</insert>
+		
+		<select id="getMemberCnt" parameterType="String" resultType="int">
+			SELECT count(*) FROM carts where id=#{memId}
+		</select>
+		
+		<select id="getCartList" parameterType="java.util.Map" resultType="bmsProject.mvc.Spring.vo.cartVo">
+			<![CDATA[
+			select * 
+			from(select num, code,id,image,title,author,price,amount,publisher,rownum rNum
+			     from  carts 
+                 where id=#{id}
+			 	 order by publisher desc)
+			where rNum>=#{start} and rNum<=#{end}
+			]]>
+		</select>
+		
+		<select id="serchBook" parameterType="int" resultType="bmsProject.mvc.Spring.vo.bookListVo">
+			SELECT * FROM booklist where code=#{code}
+		</select>
+		
+		<delete id="cartDelete" parameterType="int">
+			DELETE FROM carts WHERE num = #{num}
+		</delete>
+		
+		<update id="BookUpdate" parameterType="java.util.Map">
+			UPDATE booklist SET amount=#{amount} WHERE code=#{code}
+		</update>
+		
+		<select id="bAmount" parameterType="int" resultType="int">
+			SELECT amount FROM booklist where code=#{code}
+		</select>
+		
+		<select id="getbuyListCnt" parameterType="String" resultType="int">
+			SELECT count(*) FROM delivery where id=#{memId}
+		</select>
+		
+		<select id="getbuyList" parameterType="java.util.Map" resultType="bmsProject.mvc.Spring.vo.buyListVo">
+			<![CDATA[
+			select * 
+						 from(select d.num,b.image,d.title,b.author,d.amount,d.price,d.refund,rownum rNum  
+						      from DELIVERY d, BOOKLIST b  
+						      where b.title=d.title AND id=#{id} and refund='판매' or b.title=d.title AND id=#{id} and refund='배송대기중')
+						 where rNum>=#{start} and rNum<=#{end}
+			]]>
+		</select>
+		
+		<update id="refundUpdate" parameterType="java.util.Map">
+			UPDATE delivery SET refund=#{refund} WHERE num=#{num}
+		</update>
+		
+		<update id="closingRefundUpdate">
+			UPDATE closing SET refundcnt=refundcnt+1 WHERE num=1
+		</update>
+		
+		<select id="getBookListCnt" parameterType="String" resultType="int">
+			SELECT count(*) FROM bookList where title like #{serchLike}
+		</select>
+		
+		<select id="getbookList" parameterType="java.util.Map" resultType="bmsProject.mvc.Spring.vo.bookListVo">
+			<![CDATA[
+			select * 
+						 from(select code,image,title,author,price,amount,bookchat,sellcnt,publisher,rownum rNum 
+						      from bookList 
+						      where title like #{serch}) 
+						 where rNum>=#{start} and rNum<=#{end}
+			]]>
+		</select>
+		
+		<update id="amountChange" parameterType="java.util.Map">
+			UPDATE carts SET amount=#{amount} WHERE num=#{num}		
+		</update>
+		
+		<select id="confirmEmail" parameterType="String" resultType="int">
+			SELECT count(*) FROM cusInfo WHERE email = #{email}
+		</select>
+		
+		<select id="idSearch" parameterType="String" resultType="int">
+			SELECT id FROM cusInfo WHERE email = #{email}
+		</select>
+		
+		<select id="pwdSearch" parameterType="String" resultType="String">
+			SELECT pwd FROM cusInfo WHERE id = #{id}
+		</select>
+		
+		<select id="emailSearch" parameterType="String" resultType="String">
+			SELECT email FROM cusInfo WHERE id = #{id}
+		</select>
+	</mapper> 

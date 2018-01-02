@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!DOCTYPE mapper
+			    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+			    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+			    
+	<mapper namespace="bmsProject.mvc.Spring.persistance.BookDAO">
+		<select id="serchBook" resultType="bmsProject.mvc.Spring.vo.bookListVo" parameterType="String">
+			SELECT * FROM booklist WHERE image=#{image}
+		</select>
+		
+		<select id="memberSerch" resultType="bmsProject.mvc.Spring.vo.orderListVo" parameterType="java.util.Map" >
+			SELECT * FROM cusInfo WHERE id=#{id}
+		</select>
+		
+		<select id="bookAmount" resultType="int" parameterType="int">
+			SELECT amount FROM booklist WHERE code=#{code}
+		</select>
+		
+		<insert id="DeliveryInsert" parameterType="bmsProject.mvc.Spring.vo.orderListVo">
+			INSERT INTO Delivery VALUES(orderNum.nextval,#{id},#{name},#{hp},#{email},#{addr},#{title},#{amount},sysdate,#{price},'배송대기중')
+		</insert>
+	</mapper> 

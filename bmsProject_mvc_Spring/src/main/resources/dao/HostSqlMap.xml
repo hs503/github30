@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!DOCTYPE mapper
+			    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+			    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+			    
+	<mapper namespace="bmsProject.mvc.Spring.persistance.HostDAO">
+		<select id="getMemberCnt" resultType="int">
+			SELECT count(*) FROM cusinfo where id!='host'
+		</select>
+		
+		<select id="getMemberList" parameterType="java.util.Map" resultType="bmsProject.mvc.Spring.vo.MemberVo">
+			<![CDATA[
+			select * from(select id, pwd,name,gender,birth,email,hp,addr,rownum rNum 
+						 from  cusinfo where id!='host')
+						 where rNum>=#{start} and rNum<=#{end}
+			]]>
+		</select>
+		
+		<select id="getBookListCnt" resultType="int">
+			SELECT count(*) FROM bookList
+		</select>
+		
+		<select id="getdelivaryListCnt" resultType="int">
+			SELECT count(*) FROM Delivery
+		</select>
+		
+		<select id="getOrderListCnt" resultType="int">
+			SELECT count(*) FROM orderList
+		</select>
+		
+		<select id="getdeliveryList" parameterType="java.util.Map" resultType="bmsProject.mvc.Spring.vo.DeliveryVo">
+			<![CDATA[
+				select * 
+						 from(select num,id,name,hp,email,addr,title,amount,publisher,price,refund,rownum rNum  
+						   from(select num,id,name,hp,email,addr,title,amount,publisher,price,refund 
+						        from delivery   
+						        order by num desc  
+						   )   
+						 ) where  rNum>=#{start} and rNum<=#{end}
+			]]>
+		</select>
+		
+		<select id="getOrderList" parameterType="java.util.Map" resultType="bmsProject.mvc.Spring.vo.DeliveryVo">
+			<![CDATA[
+				select * 
+				from(select num,id,name,hp,email,addr,title,amount,publisher,price,rownum rNum
+				     from(select num,id,name,hp,email,addr,title,amount,publisher,price
+				          from orderList 
+				     ) 
+				) where  rNum>=#{start} and rNum<=#{end}
+			]]>
+		</select>
+		
+		<select id="getBookList" parameterType="java.util.Map" resultType="bmsProject.mvc.Spring.vo.bookListVo">
+			<![CDATA[
+			select * 
+					from(select code,image,title,author,price,amount,publisher,rownum rNum 
+					     from(select code,image,title,author,price,amount,publisher
+					          from  bookList 
+					          order by publisher desc
+					     )
+					) where rNum>=#{start} and rNum<=#{end}
+			]]>
+		</select>
+		
+		<insert id="insertBook" parameterType="bmsProject.mvc.Spring.vo.bookListVo">
+			INSERT INTO bookList(code,image,title,author,price,amount,bookChat) VALUES(#{code},#{image},#{title},#{author},#{price},#{amount},#{bookChat})
+		</insert>
+		
+		<delete id="deleteBook" parameterType="int">
+			DELETE FROM bookList WHERE code = #{code}
+		</delete>
+		
+		<update id="updateBook" parameterType="bmsProject.mvc.Spring.vo.bookListVo">
+			update bookList set image=#{image},title=#{title},author=#{author},price=#{price},amount=#{amount} WHERE code = #{code}
+		</update>
+		
+		<delete id="deleteMem" parameterType="String">
+			DELETE FROM cusinfo WHERE id = #{id}
+		</delete>
+		
+		<select id="odSelect" parameterType="int" resultType="bmsProject.mvc.Spring.vo.orderListVo">
+			SELECT * FROM orderList where num =#{num}
+		</select>
+		
+		<insert id="insertDeli" parameterType="bmsProject.mvc.Spring.vo.orderListVo">
+			INSERT INTO Delivery(num,id,name,hp,email,addr,title,amount,price) VALUES(#{num},#{id},#{name},#{hp},#{email},#{addr},#{title},#{amount},#{price})
+		</insert>
+		
+		<select id="sellCnt" parameterType="java.util.Map" resultType="String">
+			SELECT title FROM bookList where title =#{title}
+		</select>
+			
+		<update id="sellCntUpdate" parameterType="java.util.Map">
+			update bookList set sellCnt=sellCnt+#{amount} WHERE title = #{title}
+		</update>
+		
+		<update id="totalSale" parameterType="java.util.Map">
+			<if test="#{bookChat}.equals('human')">
+				update closing set totalSale=totalSale+#{price},human=human+#{amount} WHERE num = 1
+			</if>
+			<if test="#{bookChat}.equals('medical')">
+				update closing set totalSale=totalSale+#{price},medical=medical+#{amount} WHERE num = 1
+			</if>
+			<if test="#{bookChat}.equals('it')">
+				update closing set totalSale=totalSale+#{price},it=it+#{amount} WHERE num = 1
+			</if>
+			<if test="#{bookChat}.equals('etc')">
+				update closing set totalSale=totalSale+#{price},etc=etc+#{amount} WHERE num = 1
+			</if>
+			<if test="#{bookChat}.equals('social')">
+				update closing set totalSale=totalSale+#{price},social=social+#{amount} WHERE num = 1
+			</if>			
+		</update>
+		
+		<delete id="orderDel" parameterType="int">
+			DELETE FROM orderList WHERE num = #{num}
+		</delete>
+		
+		<select id="closingSerch" resultType="bmsProject.mvc.Spring.vo.closingVo">
+			SELECT * FROM closing where num =1
+		</select>
+		
+		<select id="bookAmountSerch" resultType="int">
+			SELECT count(*) FROM bookList where amount=0
+		</select>
+		
+		<update id="updateClosing" parameterType="int">
+			update closing set soltOutCnt=#{nullAmountCnt} WHERE num = 1
+		</update>
+		
+		<select id="selectRefundCnt" resultType="int">
+			SELECT count(*) FROM delivery where refund='환불신청'
+		</select>
+		
+		<update id="updateClosingRefund" parameterType="int">
+			update closing set refundCnt=#{refundCnt} WHERE num = 1
+		</update>
+		
+		<update id="subTotalSale" parameterType="int">
+			update closing set totalSale=totalSale-#{price} WHERE num = 1
+		</update>
+		
+		<update id="subRefundCnt">
+			update closing set refundCnt=refundCnt-1 WHERE num = 1
+		</update>
+		
+		<update id="bookRefund" parameterType="java.util.Map">
+			update bookList set amount=amount+#{amount} WHERE title = #{title}
+		</update>
+		
+		<delete id="deleteDel" parameterType="int">
+			DELETE FROM Delivery WHERE num = #{num}
+		</delete>
+		
+		<select id="serchChat" parameterType="String" resultType="String">
+			SELECT * FROM bookList where title=#{title}
+		</select>
+		
+		<update id="subChat" parameterType="java.util.Map">
+			<if test="#{bookChat}.equals('human')">
+				update closing set human=human-#{amount} WHERE num = 1
+			</if>
+			<if test="#{bookChat}.equals('medical')">
+				update closing set medical=medical-#{amount} WHERE num = 1
+			</if>
+			<if test="#{bookChat}.equals('it')">
+				update closing set it=it-#{amount} WHERE num = 1
+			</if>
+			<if test="#{bookChat}.equals('etc')">
+				update closing set etc=etc-#{amount} WHERE num = 1
+			</if>
+			<if test="#{bookChat}.equals('social')">
+				update closing set social=social-#{amount} WHERE num = 1
+			</if>			
+		</update>
+		
+		<update id="subSellCnt" parameterType="java.util.Map">
+			update bookList set sellCnt=sellCnt-#{amount} WHERE title = #{title}
+		</update>
+		
+		<update id="delUpdate">
+			update Delivery set refund='판매' WHERE num = #{num}
+		</update>
+	</mapper> 

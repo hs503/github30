@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+	<!DOCTYPE mapper
+			    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+			    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+			    
+	<mapper namespace="bmsProject.mvc.Spring.persistance.BoardDAO">
+		<select id="getArticleCnt" resultType="int">
+			select count(*) from bmsBoard
+		</select>
+		
+		<select id="getArticleList" resultType="bmsProject.mvc.Spring.vo.BoardVO" parameterType="java.util.Map">
+			<![CDATA[select *
+			 from(select num,id,writer,pwd,subject,content,readCnt,ref,ref_step,ref_level,req_date,rownum rNum 
+			      from (select * 
+			            from bmsBoard 
+			            order by ref desc, ref_step asc
+			      ) 
+			 )  
+			 where rNum>=#{start} and rNum <=#{end}
+			 ]]>
+		</select>
+		
+		<select id="getArticleContent" resultType="bmsProject.mvc.Spring.vo.BoardVO" parameterType="int">
+			SELECT * FROM bmsBoard where num=#{num}
+		</select>
+		
+		<update id="addReadCnt" parameterType="int">
+			UPDATE bmsBoard set readCnt=readCnt+1 where num=#{num}
+		</update>
+		
+		<select id="Check"  resultType="bmsProject.mvc.Spring.vo.BoardVO"  parameterType="java.util.Map">
+			SELECT * FROM bmsBoard where num=#{num} 
+		</select>
+		
+		<update id="updateModify"  parameterType="bmsProject.mvc.Spring.vo.BoardVO">
+			UPDATE bmsBoard set subject=#{subject},content=#{content},pwd=#{pwd} where num=#{num}
+		</update>
+		
+		<update id="updateReply" parameterType="bmsProject.mvc.Spring.vo.BoardVO">
+			<![CDATA[
+			UPDATE mvc_board SET ref_step = ref_step+1 WHERE ref=#{ref} AND ref_step > #{ref_step}
+			]]>
+		</update>
+		<insert id="insertBoard" parameterType="bmsProject.mvc.Spring.vo.BoardVO">
+		INSERT INTO mvc_board(num,id, writer, pwd, subject, content, readCnt, ref, ref_step, ref_level) 
+					VALUES (board_seq.NEXTVAL,,#{id}, #{writer},#{pwd},#{subject},#{content},0,#{ref},#{ref_step},#{ref_level})
+		</insert>
+		
+		<!--답글 존재여부 파악  -->
+		<select id="checkReply" resultType="int" parameterType="bmsProject.mvc.Spring.vo.BoardVO">
+			<![CDATA[SELECT COUNT(*) FROM mvc_board WHERE ref=#{ref} AND ref_step=#{ref_step}+1 AND ref_level > #{ref_level}]]>
+		</select>
+		<!--ref 업데이트  -->
+		<update id="updateRef" parameterType="bmsProject.mvc.Spring.vo.BoardVO">
+			<![CDATA[UPDATE mvc_board SET ref_step = ref_step-1 WHERE ref=#{ref} AND ref_step > #{ref_step}]]>
+		</update>
+		<!--글삭제  -->
+		<delete id="deleteBoard" parameterType="int">
+			DELETE FROM mvc_board WHERE num = #{num}
+		</delete>	
+		
+		<select id="getSArticleCnt" parameterType="String" resultType="int">
+			SELECT count(*) FROM bmsBoard where id like #{boardSerch} or writer like #{boardSerch} or subject like #{boardSerch} or content like #{boardSerch}	
+		</select>
+		
+		<select id="getSArticleList" resultType="bmsProject.mvc.Spring.vo.BoardVO" parameterType="java.util.Map">
+			<![CDATA[
+			select * 
+						 from(select num,id,writer,pwd,subject,content,readCnt,ref,ref_step,ref_level,req_date,rownum rNum 
+						      from (select * 
+						            from bmsBoard 
+						 			 where id like #{boardSerch} or writer like #{boardSerch} or subject like #{boardSerch} or content like #{boardSerch} 
+						            order by ref desc, ref_step asc
+						      )   
+						 )    
+						 where rNum>=#{start} and rNum <=#{end}
+			]]>
+		</select>
+	</mapper> 
